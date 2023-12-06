@@ -9,5 +9,4 @@ public class AnonymousChatApplication {
     public static void main(String[] args) {
         SpringApplication.run(AnonymousChatApplication.class, args);
     }
-
 }

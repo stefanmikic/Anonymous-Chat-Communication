@@ -73,8 +73,7 @@
           "options": {
             "ssl": true,
             "sslKey": "C:\\Users\\Korisnik\\Certificates\\client.key",
-            "sslCert": "C:\\Users\\Korisnik\\Certificates\\client.crt",
-            "proxyConfig": "src/proxy.conf.json"
+            "sslCert": "C:\\Users\\Korisnik\\Certificates\\client.crt"
           },
           "configurations": {
             "production": {
