@@ -1,0 +1,14 @@
+server:
+  ssl:
+    key-store: file:C:/Users/Korisnik/CertificatesV2/keystore.jks
+    key-store-password: rootca
+    key-alias: localhost
+    key-password: root
+    enabled: true
+  port: 8443
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+
