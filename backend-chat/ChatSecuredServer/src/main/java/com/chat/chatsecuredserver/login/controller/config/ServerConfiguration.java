@@ -82,6 +82,8 @@ public class ServerConfiguration {
     @Bean
     public void addUsersToDB(){
         UserInMemoryDB db = UserInMemoryDB.getInstance();
+        db.addUser("stefan", "stefan");
         db.addUser("marko", "marko");
+        db.addUser("darko", "darko");
     }
 }
