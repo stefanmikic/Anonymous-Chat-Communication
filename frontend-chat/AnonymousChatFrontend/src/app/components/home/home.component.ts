@@ -13,9 +13,7 @@ export class HomeComponent {
   newMessage: string = '';
 
   sendMessage(): void {
-    const messageData = {
-      text: 'Hello, how are you?',
-    };
+    const messageData =  'Hello, how are you?';
 
     this.messageService.sendMessage(messageData)
       .subscribe(

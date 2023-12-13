@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MessageService {
-  private apiUrl = 'https://localhost:8443/api/messages/send';
+  private apiUrl = 'https://localhost:8443/send';
   constructor(private http: HttpClient) { }
 
   sendMessage(messageData: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(this.apiUrl, messageData, { headers });
+    return this.http.post<any>(this.apiUrl, messageData);
   }
 }
