@@ -8,18 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/messages")
 public class MessageController {
 
     private final List<String> messages = new ArrayList<>(new ArrayList<>(List.of(new String[]{new String("test")})));
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestBody String messageRequest) {
+    public ResponseEntity<Boolean> sendMessage(@RequestBody String messageRequest) {
+        System.out.println("TEST");
         String message = messageRequest;
-
-        messages.add(message);
-
-        return new ResponseEntity<>("Message sent successfully!", HttpStatus.CREATED);
+        return ResponseEntity.ok(true);
     }
 
     @GetMapping("/all")

@@ -1,31 +1,25 @@
-package config;
+package com.chat.anonymouschat.login.controller.config;
 
+
+
+import com.chat.anonymouschat.login.controller.UserMemoryDB;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 
 import javax.net.ssl.*;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
-@EnableWebSecurity
 @Configuration
-
-public class MyConfig implements WebMvcConfigurer {
+public class MyConfig{
     @Bean
     public RestTemplate restTemplate(){
 
@@ -67,13 +61,23 @@ public class MyConfig implements WebMvcConfigurer {
 //    }
 
     @Bean
+    public void addUsers()
+    {
+        UserMemoryDB db = UserMemoryDB.getInstance();
+        db.addUser("milos", "milos");
+        db.addUser("marko", "marko");
+        db.addUser("zarko", "zarko");
+    }
+
+    @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(false);
         config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.addAllowedHeader("");
+        config.addAllowedMethod("");
+        config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(0);
@@ -84,7 +88,7 @@ public class MyConfig implements WebMvcConfigurer {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest()
                         .permitAll())
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf().disable();
         return http.build();
     }
 }
