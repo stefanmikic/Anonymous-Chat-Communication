@@ -1,5 +1,6 @@
 package com.chat.chatsecuredserver.login.controller.config;
 
+import com.chat.chatsecuredserver.repository.UserInMemoryDB;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,5 +76,12 @@ public class ServerConfiguration {
                         .permitAll())
                 .csrf().disable();
         return http.build();
+    }
+
+    //adding users to database
+    @Bean
+    public void addUsersToDB(){
+        UserInMemoryDB db = UserInMemoryDB.getInstance();
+        db.addUser("marko", "marko");
     }
 }
