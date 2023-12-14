@@ -1,6 +1,6 @@
 server:
   ssl:
-    key-store: file:C:/Users/Korisnik/CertificatesV2/chatserverstore.jks
+    key-store: file:C:/Users/Korisnik/CertificatesV2/keystore.jks
     key-store-password: rootca
     key-alias: localhost
     key-password: root
@@ -11,5 +11,8 @@ spring:
     user:
       name: admin
       password: admin
-
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
