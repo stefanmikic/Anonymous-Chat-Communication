@@ -85,5 +85,6 @@ public class ServerConfiguration {
         db.addUser("stefan", "stefan");
         db.addUser("marko", "marko");
         db.addUser("darko", "darko");
+        db.addUser("zdravko", "zdravko");
     }
 }
