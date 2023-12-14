@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class MessageService {
 
-    
+
     /*public void processMessage(String message){
         int numOfParts = selectRandomValue();
 
