@@ -1,0 +1,18 @@
+server:
+  ssl:
+    key-store: file:C:/Users/Korisnik/CertificatesV2/keystore.jks
+    key-store-password: rootca
+    key-alias: localhost
+    key-password: root
+    enabled: true
+  port: 443
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest

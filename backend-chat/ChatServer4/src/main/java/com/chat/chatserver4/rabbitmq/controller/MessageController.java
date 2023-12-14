@@ -1,6 +1,6 @@
-package com.chat.chatserver1.rabbitmq.controller;
+package com.chat.chatserver4.rabbitmq.controller;
 
-import com.chat.chatserver1.rabbitmq.service.MessageService;
+import com.chat.chatserver4.rabbitmq.service.MessageService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +24,13 @@ public class MessageController {
     @GetMapping("/drain")
     public String getMessage()
     {
-        String response =messageService.drain("chatServer1Queue");
+        String response =messageService.drain("chatServer4Queue");
         return response;
     }
     @PostMapping("/save")
     public ResponseEntity<Boolean> saveMessage(@RequestBody String message)
     {
-        rabbitTemplate.convertAndSend("", "chatServer1Queue", message);
+        rabbitTemplate.convertAndSend("", "chatServer4Queue", message);
         return ResponseEntity.ok(true);
     }
 }
