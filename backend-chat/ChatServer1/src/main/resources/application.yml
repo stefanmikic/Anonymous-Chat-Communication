@@ -1,0 +1,15 @@
+server:
+  ssl:
+    key-store: file:C:/Users/Korisnik/CertificatesV2/chatserverstore.jks
+    key-store-password: rootca
+    key-alias: localhost
+    key-password: root
+    enabled: true
+  port: 8445
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+
+
