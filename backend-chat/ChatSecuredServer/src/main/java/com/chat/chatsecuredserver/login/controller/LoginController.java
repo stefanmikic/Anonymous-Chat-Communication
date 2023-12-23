@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class LoginController {
 
-    private List<String> loggedInUsers = new ArrayList<>();
+    public static List<String> loggedInUsers = new ArrayList<>();
 
 
     //endpoint for users login

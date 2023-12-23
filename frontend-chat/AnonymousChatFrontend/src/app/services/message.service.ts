@@ -1,25 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { randomUUID } from 'node:crypto';
+import { CryptoService } from './crypto.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  private apiUrl = 'https://localhost:8443/send';
-  constructor(private http: HttpClient) { }
+  private apiUrl = 'https://localhost:8443/save-message';
+  constructor(private http: HttpClient) { 
+  }
 
-  sendMessage(messageData: any): Observable<any> {
+  //sending message to backend server  
+  sendMessage(messageData: string): Observable<string> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<any>(this.apiUrl, messageData);
   }
 
+  //select random integer between startValue and endValue
   selectRandomValue(): number {
     const startValue: number = 3;
     const endValue: number = 11;
     return Math.floor(Math.random() * (endValue - startValue)) + startValue;
   }
 
+  //split message into equal number of parts
   splitMessage(message: string, numOfParts: number): string[] {
     const parts: string[] = new Array(numOfParts);
     const partLength: number = Math.ceil(message.length / numOfParts);
@@ -34,8 +40,22 @@ export class MessageService {
     return parts;
   }
 
-  processMessage(message: string): void {
-    
+  processMessage(message: string, sender: string, reciever: string): Observable<string>{
+   const splittedMessage = this.splitMessage(message, this.selectRandomValue());
+   splittedMessage.forEach(part => {
+   this.sendMessage(part).subscribe(
+      (response) => {
+        console.log('Response from the server:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+   )});
+   return new Observable<string>;
+   
+
+
+   
 
   }
   

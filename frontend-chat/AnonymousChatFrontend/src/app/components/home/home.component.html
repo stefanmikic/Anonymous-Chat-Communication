@@ -7,16 +7,13 @@
   </div>
   <div class="chat-window">
     <div class="messages">
-      <!-- This section can display chat messages -->
-      <!-- Example: <div class="message">{{ message.content }}</div> -->
     </div>
     <div class="input-area">
       <select [(ngModel)]="selectedUser">
         <option *ngFor="let user of loggedInUsers" [value]="user">{{ user }}</option>
       </select>
       <input type="text" placeholder="Type your message..." [(ngModel)]="newMessage" />
-      <!-- Replace the button tag with a form tag -->
-      <form (ngSubmit)="sendMessage()">
+      <form (ngSubmit)="sendMessage(newMessage)">
         <button type="submit">Send</button>
       </form>
     </div>

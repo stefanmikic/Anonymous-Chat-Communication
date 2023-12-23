@@ -27,10 +27,9 @@ export class HomeComponent implements OnInit{
       }
     );
   }
-  sendMessage(): void {
-    const messageData =  'Hello, how are you?';
+  sendMessage(messageData: string): void {
 
-    this.messageService.sendMessage(messageData)
+    this.messageService.processMessage(messageData, "test", "test")
       .subscribe(
         response => {
           console.log('Message sent successfully!', response);
