@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../../services/message.service';
 import { AuthService } from '../../services/auth.service';
+import { CryptoService } from '../../services/crypto.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit{
-  constructor(private messageService: MessageService, private authService: AuthService) { }
+  constructor(private messageService: MessageService, private authService: AuthService, private cryptoService: CryptoService) { }
   loggedInUsers: string[] = [];
   selectedUser: string = '';
   newMessage: string = '';
@@ -27,9 +28,12 @@ export class HomeComponent implements OnInit{
       }
     );
   }
-  sendMessage(messageData: string): void {
+  async sendMessage(messageData: string): Promise<void> {
 
-    this.messageService.processMessage(messageData, "test", "test")
+    const keys = await this.cryptoService.generateKeyPair();
+
+    
+    this.messageService.processMessage(messageData, "stefan", "marko", keys.publicKey)
       .subscribe(
         response => {
           console.log('Message sent successfully!', response);

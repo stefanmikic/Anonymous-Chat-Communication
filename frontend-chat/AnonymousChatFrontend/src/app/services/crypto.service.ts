@@ -13,12 +13,12 @@ export class CryptoService {
       );
 
       const exportedPublicKey: ArrayBuffer = await window.crypto.subtle.exportKey(
-        'raw', 
+        'spki', 
         keys.publicKey
       );
 
       const exportedPrivateKey: ArrayBuffer = await window.crypto.subtle.exportKey(
-        'raw', 
+        'pkcs8', 
         keys.privateKey
       );
 
