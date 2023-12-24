@@ -40,10 +40,11 @@ export class MessageService {
     return parts;
   }
 
-  processMessage(message: string, sender: string, reciever: string, key: string): Observable<string>{
+  processMessage(message: string, sender: string, reciever: string, key: string, date: string): Observable<string>{
    const splittedMessage = this.splitMessage(message, this.selectRandomValue());
+   let i = 1;
    splittedMessage.forEach(part => {
-   this.sendMessage(part + " sender:" + sender + " reciever: " + reciever + " key: " + key + "\n").subscribe(
+   this.sendMessage(i++ + "||" + part + "||" + sender + "||" + reciever + "||" + date + "||" + key + "\n").subscribe(
       (response) => {
         console.log('Response from the server:', response);
       },
