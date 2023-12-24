@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { randomUUID } from 'node:crypto';
 import { CryptoService } from './crypto.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
   private apiUrl = 'https://localhost:8443/save-message';
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient, private cryptoService: CryptoService) { 
   }
 
   //sending message to backend server  
@@ -39,12 +39,20 @@ export class MessageService {
 
     return parts;
   }
+//forming message which will be sent on backend
+ async processMessage(message: string, sender: string, reciever: string,  date: string): Promise<Observable<string>>{
+    const keys = await this.cryptoService.generateKeyPair();
+    const privateKey = keys.privateKey;
+    const publicKey = keys.publicKey;
 
-  processMessage(message: string, sender: string, reciever: string, key: string, date: string): Observable<string>{
+   
+
    const splittedMessage = this.splitMessage(message, this.selectRandomValue());
    let i = 1;
-   splittedMessage.forEach(part => {
-   this.sendMessage(i++ + "||" + part + "||" + sender + "||" + reciever + "||" + date + "||" + key + "\n").subscribe(
+    splittedMessage.forEach(async part => {
+    let encryptData =await this.cryptoService.encryptData(part, publicKey);
+    let decryptData = await this.cryptoService.decryptData(encryptData, privateKey);
+   this.sendMessage(i++ + "||" + decryptData + "||" + sender + "||" + reciever + "||" + date + "||" + privateKey + "\n").subscribe(
       (response) => {
         console.log('Response from the server:', response);
       },

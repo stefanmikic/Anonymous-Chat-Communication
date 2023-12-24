@@ -30,9 +30,8 @@ export class HomeComponent implements OnInit{
       }
     );
   }
-  async sendMessage(messageData: string): Promise<void> {
+  sendMessage(messageData: string): void {
 
-    const keys = await this.cryptoService.generateKeyPair();
     let sender : string = '';
     const currentDate = new Date();
 
@@ -40,15 +39,8 @@ export class HomeComponent implements OnInit{
       sender = params['username'];
 
     })
-    this.messageService.processMessage(messageData, sender, this.selectedUser, keys.publicKey, currentDate.toString())
-      .subscribe(
-        response => {
-          console.log('Message sent successfully!', response);
-        },
-        error => {
-          console.error('Failed to send message:', error);
-        }
-      );
+    this.messageService.processMessage(messageData, sender, this.selectedUser, currentDate.toString())
+  
   }
 
 }
