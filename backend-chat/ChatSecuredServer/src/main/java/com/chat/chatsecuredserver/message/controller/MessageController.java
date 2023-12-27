@@ -33,7 +33,7 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping("/save-message")
-    public ResponseEntity<String> forwardMessage(@RequestBody String message) {
+    public ResponseEntity<Void> forwardMessage(@RequestBody String message) {
         return messageService.forwardMessage(message);
     }
 

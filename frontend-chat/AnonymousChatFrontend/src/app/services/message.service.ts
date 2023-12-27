@@ -51,7 +51,6 @@ export class MessageService {
 
       const endIndex = startIndex + partLength;
       let part = message.substring(startIndex, endIndex);
-      console.log("PART: ", part);
       parts.push(part);
       startIndex = endIndex;
     }
@@ -60,7 +59,7 @@ export class MessageService {
   }
 
   //forming message which will be sent on backend
-  async processMessage(message: string, sender: string, reciever: string, date: string): Promise<Observable<string>> {
+  async processMessage(message: string, sender: string, reciever: string, date: string): Promise<void> {
     //instantiate keys for message that is going to be sent  
     const keys = await this.cryptoService.generateKeyPair();
     const privateKey = keys.privateKey;
@@ -82,16 +81,15 @@ export class MessageService {
       //for each part send it's ordinal number, and public key
       let msg = i++ + "p@rt" + id + "p@rt" + encryptData + "p@rt" + sender + "p@rt" + reciever +
         "p@rt" + date + "p@rt" + privateKey + "@@";
-      this.sendMessage(msg).subscribe(
-        (response) => {
+      this.sendMessage(msg).subscribe({
+        next: (response) => {
           console.log('Response from the server:', response);
         },
-        (error) => {
+        error: (error) => {
           console.error('Error:', error);
         }
-      )
+      });
     });
-    return new Observable<string>;
   }
 
   getUserMessages(reciever: string): Observable<Array<string>> {
@@ -148,24 +146,20 @@ export class MessageService {
       let uuidMessages = parts.filter(part => this.getUUIDFromMessage(part) === uuid);
       differentMessages.set(uuid, uuidMessages);
     });
-    console.log('keys: ', Object.keys(differentMessages))
     //sorting message parts for a message
     Array.from(differentMessages.keys()).forEach(key => {
-      console.log('BEFORE: ', differentMessages.get(key))
       differentMessages.set(key, this.sortMessagesByid(differentMessages.get(key)));
     })
-    console.log('HASHMAP: ', differentMessages);
-    
-    let msg : string;
+
+    let msg: string;
     //forming message from sorted parts
     return this.formMessageFromHashMap(differentMessages);
   }
 
   formMessageFromHashMap(map: Map<string, string[]>): string[] {
     let messages: Array<string> = new Array<string>();
-    Array.from(map.keys()).forEach( async key => {
+    Array.from(map.keys()).forEach(async key => {
       let messageParts: string[] = map.get(key);
-      console.log("TIP: ", typeof(this.buildAndDecryptMessages(messageParts)));
       let fullMessage: string = await this.buildAndDecryptMessages(messageParts);
       messages.push(this.getSenderFromMessage(messageParts[0]) + ': ' + fullMessage + ' - ' + this.getDateFromMessage(messageParts[0]).slice(0, 25));
     });
@@ -203,7 +197,6 @@ export class MessageService {
         return await this.decryptMessage(msg);
       })
     );
-    console.log('FULL MESSAGE: ', decryptedMessages.join(''))
     return decryptedMessages.join('');
   }
 

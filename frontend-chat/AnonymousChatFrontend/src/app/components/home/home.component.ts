@@ -41,7 +41,6 @@ export class HomeComponent implements OnInit {
   fetchLoggedInUsers(): void {
     this.authService.getLoggedInUsers().subscribe({
       next: (data: string[]) => {
-        console.log('Test: ', data)
         this.loggedInUsers = data;
       },
       error: (error: any) => {
@@ -58,7 +57,7 @@ export class HomeComponent implements OnInit {
       this.route.queryParams.subscribe(params => {
         sender = params['username'];
       })
-      this.messageService.processMessage(messageData, sender, this.selectedUser, currentDate.toString())
+      this.messageService.processMessage(messageData, sender, this.selectedUser, currentDate.toString());
     } else {
       alert('Receiver must be selected.');
     }
@@ -67,7 +66,6 @@ export class HomeComponent implements OnInit {
   fetchMessages(): void {
     this.messageService.drainMessages().subscribe(
       (data: string) => {
-        console.log("PORUKE: ", data);
 
         // this.messages = this.messageService.formMessage("marko");
       },

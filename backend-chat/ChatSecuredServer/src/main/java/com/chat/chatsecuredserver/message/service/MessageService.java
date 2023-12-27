@@ -21,7 +21,7 @@ public class MessageService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public ResponseEntity<String> forwardMessage(String message) {
+    public ResponseEntity<Void> forwardMessage(String message) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -31,10 +31,10 @@ public class MessageService {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(forwardUrl, HttpMethod.POST, request, String.class);
-            return new ResponseEntity<>("Message forwarded successfully", HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (RestClientException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Failed to forward message", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
