@@ -97,7 +97,7 @@ public class MessageService {
                         userMessages.add(parts[i]);
                     }
                     else {
-                        forwardMessage(parts[i]);
+                        forwardMessage(parts[i] + "@@");
                     }
                 }
             }

@@ -73,7 +73,6 @@ export class MessageService {
     if (partsNumber > message.length) {
       partsNumber = message.length;
     }
-    partsNumber = 3;
     const splittedMessage = this.splitMessage(message, partsNumber);
     let i = 1;
     splittedMessage.forEach(async part => {
@@ -81,10 +80,7 @@ export class MessageService {
       let encryptData = await this.cryptoService.encryptData(part, publicKey);
       //for each part send it's ordinal number, and public key
       let msg = i++ + "p@rt" + id + "p@rt" + encryptData + "p@rt" + sender + "p@rt" + reciever +
-        "p@rt" + date + "p@rt" + privateKey;
-      if (i < splittedMessage.length) {
-        msg += "@@"; // delimiter
-      }
+        "p@rt" + date + "p@rt" + privateKey + "@@";
       this.sendMessage(msg).subscribe(
         (response) => {
           console.log('Response from the server:', response);
@@ -113,7 +109,7 @@ export class MessageService {
               .decryptData(part.split("p@rt")[2], part.split("p@rt")[6]));
           }
         });
-        return messages;
+        return this.composeMessage(messages);
       }),
       catchError((error: any) => {
         console.error("An error occurred when trying to fetch messages for the user: ", error);
@@ -135,6 +131,13 @@ export class MessageService {
 
   drainMessages(): Observable<string> {
     return this.http.get<string>(this.apiUrlGetMessages);
+  }
+
+  composeMessage(parts: string[]): string[] {
+    let messages: string[];
+
+    return messages;
+
   }
 
 }
