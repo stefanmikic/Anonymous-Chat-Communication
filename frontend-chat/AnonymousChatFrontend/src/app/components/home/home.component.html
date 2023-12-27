@@ -7,15 +7,16 @@
   </div>
   <div class="chat-window">
     <div class="messages">
+      <div *ngFor="let message of messages">
+        {{ message }}
+      </div>
     </div>
     <div class="input-area">
       <select [(ngModel)]="selectedUser">
         <option *ngFor="let user of loggedInUsers" [value]="user">{{ user }}</option>
       </select>
       <input type="text" placeholder="Type your message..." [(ngModel)]="newMessage" />
-      <form (ngSubmit)="sendMessage(newMessage)">
-        <button type="submit">Send</button>
-      </form>
+      <button type="submit" (click)="sendMessage(newMessage)">Send</button>
     </div>
   </div>
 </div>

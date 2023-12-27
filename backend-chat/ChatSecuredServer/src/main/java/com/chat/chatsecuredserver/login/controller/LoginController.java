@@ -34,7 +34,7 @@ public class LoginController {
 
     //endpoint to get currently logged-in users
     @GetMapping("/logged-in-users")
-    public List<String> getLoggedInUsers() {
-        return loggedInUsers;
+    public ResponseEntity<List<String>> getLoggedInUsers() {
+        return ResponseEntity.ok(loggedInUsers);
     }
 }
