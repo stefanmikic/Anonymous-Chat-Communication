@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { CryptoService } from './crypto.service';
-import { randomUUID } from 'node:crypto';
+import { v4 as uuidv4 } from 'uuid';
+import { error } from 'console';
 
 
 @Injectable({
@@ -34,30 +35,30 @@ export class MessageService {
       console.error('Error: Message length is smaller than numOfParts');
       return [];
     }
-  
+
     const minCharsPerPart = Math.floor(message.length / numOfParts);
     let extraChars = message.length % numOfParts;
-  
+
     const parts: string[] = [];
     let startIndex = 0;
-  
+
     for (let i = 0; i < numOfParts; i++) {
       let partLength = minCharsPerPart;
       if (extraChars > 0) {
         partLength++;
         extraChars--;
       }
-  
+
       const endIndex = startIndex + partLength;
       let part = message.substring(startIndex, endIndex);
       console.log("PART: ", part);
       parts.push(part);
       startIndex = endIndex;
     }
-  
+
     return parts;
   }
-  
+
   //forming message which will be sent on backend
   async processMessage(message: string, sender: string, reciever: string, date: string): Promise<Observable<string>> {
     //instantiate keys for message that is going to be sent  
@@ -66,7 +67,7 @@ export class MessageService {
     const publicKey = keys.publicKey;
 
     //create an id for each message
-    const id = '1';
+    const id = uuidv4();
 
     //split message into random number of parts
     let partsNumber = this.selectRandomValue();
@@ -105,11 +106,10 @@ export class MessageService {
         let messages: Array<string> = [];
         data.forEach(async (part: string) => {
           if (part) {
-            messages.push(await this.cryptoService
-              .decryptData(part.split("p@rt")[2], part.split("p@rt")[6]));
+            messages.push(await this.decryptMessage(part));
           }
         });
-        return this.composeMessage(messages);
+        return this.composeMessage(data);
       }),
       catchError((error: any) => {
         console.error("An error occurred when trying to fetch messages for the user: ", error);
@@ -135,9 +135,78 @@ export class MessageService {
 
   composeMessage(parts: string[]): string[] {
     let messages: string[];
-
-    return messages;
-
+    let sender: string;
+    let differentMessages = new Map<string, string[]>();
+    let uuidsSet: Set<string> = new Set<string>();
+    parts.forEach(part => {
+      const uuid = this.getUUIDFromMessage(part);
+      if (uuid) {
+        uuidsSet.add(uuid);
+      }
+    });
+    uuidsSet.forEach(uuid => {
+      let uuidMessages = parts.filter(part => this.getUUIDFromMessage(part) === uuid);
+      differentMessages.set(uuid, uuidMessages);
+    });
+    console.log('keys: ', Object.keys(differentMessages))
+    //sorting message parts for a message
+    Array.from(differentMessages.keys()).forEach(key => {
+      console.log('BEFORE: ', differentMessages.get(key))
+      differentMessages.set(key, this.sortMessagesByid(differentMessages.get(key)));
+    })
+    console.log('HASHMAP: ', differentMessages);
+    
+    let msg : string;
+    //forming message from sorted parts
+    return this.formMessageFromHashMap(differentMessages);
   }
+
+  formMessageFromHashMap(map: Map<string, string[]>): string[] {
+    let messages: Array<string> = new Array<string>();
+    Array.from(map.keys()).forEach( async key => {
+      let messageParts: string[] = map.get(key);
+      console.log("TIP: ", typeof(this.buildAndDecryptMessages(messageParts)));
+      let fullMessage: string = await this.buildAndDecryptMessages(messageParts);
+      messages.push(this.getSenderFromMessage(messageParts[0]) + ': ' + fullMessage + ' - ' + this.getDateFromMessage(messageParts[0]).slice(0, 25));
+    });
+    return messages;
+  }
+
+
+  getUUIDFromMessage(msg: string): string {
+    let parts: string[] = msg.split('p@rt');
+    return parts[1];
+  }
+
+  sortMessagesByid(messages: string[]): string[] {
+    return messages.sort((a, b) => Number(a.split('p@rt')[0]) - Number(b.split('p@rt')[0]));
+  }
+
+  getSenderFromMessage(msg: string): string {
+    let parts: string[] = msg.split('p@rt');
+    return parts[3];
+  }
+
+  getDateFromMessage(msg: string): string {
+    let parts: string[] = msg.split('p@rt');
+    return parts[5];
+  }
+
+  async decryptMessage(msg: string): Promise<string> {
+    return this.cryptoService.decryptData(msg.split("p@rt")[2], msg.split("p@rt")[6])
+  }
+
+  async buildAndDecryptMessages(messages: string[]): Promise<string> {
+    let fullMessage: string;
+    let decryptedMessages: string[] = await Promise.all(
+      messages.map(async msg => {
+        return await this.decryptMessage(msg);
+      })
+    );
+    console.log('FULL MESSAGE: ', decryptedMessages.join(''))
+    return decryptedMessages.join('');
+  }
+
+
 
 }
