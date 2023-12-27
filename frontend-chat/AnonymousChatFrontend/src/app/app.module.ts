@@ -8,13 +8,14 @@ import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageComponent } from './components/message/message.component';
+import { CryptoService } from './services/crypto.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
-    MessageComponent
+    MessageComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,7 +24,9 @@ import { MessageComponent } from './components/message/message.component';
     HttpClientModule
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    [CryptoService]
+    
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,6 @@
 server:
   ssl:
-    key-store: file:C:/Users/Korisnik/CertificatesV2/keystore.jks
+    key-store: file:C:/Users/Korisnik/CertificatesV2/chatserver1store.jks
     key-store-password: rootca
     key-alias: localhost
     key-password: root

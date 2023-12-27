@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class LoginController {
 
-    private List<String> loggedInUsers = new ArrayList<>();
+    public static List<String> loggedInUsers = new ArrayList<>();
 
 
     //endpoint for users login
@@ -34,7 +34,7 @@ public class LoginController {
 
     //endpoint to get currently logged-in users
     @GetMapping("/logged-in-users")
-    public List<String> getLoggedInUsers() {
-        return loggedInUsers;
+    public ResponseEntity<List<String>> getLoggedInUsers() {
+        return ResponseEntity.ok(loggedInUsers);
     }
 }

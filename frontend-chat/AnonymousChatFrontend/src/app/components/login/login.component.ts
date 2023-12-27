@@ -26,9 +26,7 @@ export class LoginComponent {
           }
         },
         error => {
-          // Handle error responses
           console.error('Login failed', error);
-          // Display error message to user or perform necessary actions
         }
       );
   }
